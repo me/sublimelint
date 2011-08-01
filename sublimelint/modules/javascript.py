@@ -1,6 +1,6 @@
 # javascript.py - sublimelint package for checking javascript files
 
-import subprocess, os
+import subprocess, os, sys
 
 def check(codeString, filename):
   info = None
@@ -10,8 +10,10 @@ def check(codeString, filename):
     info.dwFlags |= subprocess.STARTF_USESHOWWINDOW
     info.wShowWindow = subprocess.SW_HIDE
     cmd = os.path.join(base, 'jsl', 'windows', 'jsl.exe')
-  else:
+  elif sys.platform == 'darwin':
     cmd = os.path.join(base, 'jsl', 'osx', 'jsl')
+  else:
+    cmd = 'jsl'
     
 
   process = subprocess.Popen((cmd, '-stdin'), 
