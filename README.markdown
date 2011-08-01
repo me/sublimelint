@@ -9,6 +9,7 @@ Supports the following languages:
 * PHP - syntax checking via "php -l"
 * Perl - syntax+deprecation checking via "perl -c"
 * Ruby - syntax checking via "ruby -wc"
+* JavaScript - syntax checking via JSLint
 
 Installing
 -----
