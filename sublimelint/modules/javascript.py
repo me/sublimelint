@@ -13,7 +13,7 @@ def check(codeString, filename):
     
     args = ['jsl', '-stdin']
 
-    config_file = os.path.join(sublime.packages_path(), 'jslint.conf')
+    config_file = os.path.join(sublime.packages_path(), 'User', 'jslint.conf')
 
     if os.path.exists(config_file):
         args += ["-conf", config_file]
@@ -36,7 +36,7 @@ description =\
 '''* view.run_command("lint", "JavaScript")
         Turns background linter off and runs the jsl Javascript linter (http://www.javascriptlint.com/), 
         assumed to be on $PATH, on current view.
-        If a file named "jslint.conf" is found in the Sublime Text 2 Packages directory, it will passed
+        If a file named "jslint.conf" is found in the Sublime Text 2 "User" packages directory, it will passed
         to jsl.
 '''
 
