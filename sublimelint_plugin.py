@@ -97,7 +97,7 @@ def run(module, view):
 
 def validate(view):
 	for language in languages:
-		if language in view.settings().get("syntax"):
+		if language + ".tmLanguage" in view.settings().get("syntax"):
 			run(languages[language], view)
 			break
 

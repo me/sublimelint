@@ -1,38 +1,43 @@
 # javascript.py - sublimelint package for checking javascript files
 
-import subprocess, os, sys
+import subprocess, os
+import sublime
 
 def check(codeString, filename):
-  info = None
-  base = os.path.dirname(os.path.dirname(os.path.abspath( __file__ )))
-  if os.name == 'nt':
-    info = subprocess.STARTUPINFO()
-    info.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-    info.wShowWindow = subprocess.SW_HIDE
-    cmd = os.path.join(base, 'jsl', 'windows', 'jsl.exe')
-  elif sys.platform == 'darwin':
-    cmd = os.path.join(base, 'jsl', 'osx', 'jsl')
-  else:
-    cmd = 'jsl'
+    info = None
+    config_file = None
+    if os.name == 'nt':
+        info = subprocess.STARTUPINFO()
+        info.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        info.wShowWindow = subprocess.SW_HIDE
     
+    args = ['jsl', '-stdin']
 
-  process = subprocess.Popen((cmd, '-stdin'), 
-                stdin=subprocess.PIPE, 
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                startupinfo=info)
-  result = process.communicate(codeString)[0]
-  
-  return result
+    config_file = os.path.join(sublime.packages_path(), 'jslint.conf')
 
-# start sublimelint Ruby plugin
+    if os.path.exists(config_file):
+        args += ["-conf", config_file]
+
+    process = subprocess.Popen(
+        args, 
+        stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, 
+        startupinfo=info
+    )
+    result = process.communicate(codeString)[0]
+    return result
+
+
+# start sublimelint Javascript plugin
+
 import re
 __all__ = ['run', 'language']
 language = 'JavaScript'
 description =\
 '''* view.run_command("lint", "JavaScript")
-        Turns background linter off and runs the jsl Javascript linter
-        on current view.
+        Turns background linter off and runs the jsl Javascript linter (http://www.javascriptlint.com/), 
+        assumed to be on $PATH, on current view.
+        If a file named "jslint.conf" is found in the Sublime Text 2 Packages directory, it will passed
+        to jsl.
 '''
 
 def run(code, view, filename='untitled'):
